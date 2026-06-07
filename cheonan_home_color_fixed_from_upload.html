@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>천안 상권 어때? | 천안시 입지·상권 분석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=your_naver_client_id&submodules=geocoder,visualization"></script>
+<style>
+:root{--bg:#f1f7f4;--navy:#0b4a6f;--navy2:#0e64b0;--card:#fff;--line:#d7e6e0;--muted:#5b7068;--ink:#11261f;--blue:#0e64b0;--sky:#e4f0fb;--orange:#e8472a;--green:#1a9e3e;--red:#e8472a;--purple:#7c3aed;--cheonan-blue:#0e64b0;--cheonan-green:#1a9e3e;--cheonan-orange:#e8472a;--shadow:0 18px 50px rgba(11,74,111,.14);--r:22px;--rs:14px}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Noto Sans KR',sans-serif;color:var(--ink);background:var(--bg);height:100vh;overflow:hidden}.num{font-family:'Outfit',sans-serif}.display{font-family:'Black Han Sans',sans-serif}.app{height:100vh;display:grid;grid-template-rows:72px 1fr}.top{background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:0 24px;z-index:20}.brand{display:flex;align-items:center;gap:11px}.brand-icon-img{width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(11,74,111,.18))}.brand-text{display:flex;flex-direction:column;line-height:1.15}.brand-text strong{font-size:20px;color:var(--navy)}.brand-text small{font-size:11px;color:var(--cheonan-green);font-weight:800;margin-top:2px}.brand strong{font-size:20px}.search{max-width:430px;flex:1;position:relative}.search input{width:100%;height:42px;border:1px solid var(--line);border-radius:999px;padding:0 18px 0 40px;font:inherit;outline:none;background:#f3faf6}.search b{position:absolute;left:15px;top:9px}.nav-tabs{display:flex;gap:8px;margin-left:auto}.nav-tabs button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 15px;font-weight:800;color:#42605a;cursor:pointer}.nav-tabs button.active{background:linear-gradient(135deg,var(--cheonan-blue),var(--cheonan-green));border-color:var(--cheonan-blue);color:#fff}.layout{display:grid;grid-template-columns:450px 1fr 390px;min-height:0}.left,.right{overflow:auto;padding:18px;background:#f4faf7}.left{border-right:1px solid var(--line)}.right{border-left:1px solid var(--line)}.hero{background:radial-gradient(circle at 90% 0%,rgba(26,158,62,.28) 0 160px,transparent 161px),linear-gradient(135deg,#0b4a6f,#0e64b0 55%,#1a9e3e);color:#fff;border-radius:28px;padding:26px;margin-bottom:16px;box-shadow:var(--shadow)}.hero .kicker{font-weight:900;color:#bfe8ff;margin-bottom:10px}.hero h1{font-size:29px;line-height:1.28;margin-bottom:13px}.hero p{font-size:15px;line-height:1.8;color:#d8e7ff}.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}.hero-stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:18px}.hero-stat .v{font-size:34px;font-weight:900}.hero-stat .l{font-size:13px;font-weight:800;color:#d8e7ff}.panel{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:0 8px 24px rgba(15,23,42,.05)}.panel h3{font-size:15px;margin-bottom:12px}.chips{display:flex;gap:7px;flex-wrap:wrap}.chip{border:1px solid var(--line);background:#fff;color:#42605a;border-radius:999px;padding:8px 11px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}.chip.active{background:var(--cheonan-blue);border-color:var(--cheonan-blue);color:#fff}.chip.gu{background:#e4f0fb}.section-title{display:flex;justify-content:space-between;align-items:end;margin:18px 2px 10px}.section-title h2{font-size:18px}.section-title span{font-size:12px;color:var(--muted);font-weight:700}.rank-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:10px;display:grid;grid-template-columns:46px 1fr auto;gap:12px;align-items:center;cursor:pointer;transition:.18s}.rank-card:hover{transform:translateY(-1px);box-shadow:0 12px 30px rgba(11,74,111,.1)}.rank-no{width:40px;height:40px;border-radius:14px;background:#e4f0fb;display:grid;place-items:center;font-weight:900;color:var(--cheonan-blue)}.rank-name{font-size:16px;font-weight:900}.rank-meta{margin-top:4px;color:var(--muted);font-size:12px;line-height:1.45}.rank-score{text-align:right}.rank-score .v{font-size:26px;font-weight:900;color:var(--cheonan-blue)}.rank-score .l{font-size:10px;color:var(--muted);font-weight:900}.tag{display:inline-block;border-radius:999px;padding:3px 8px;font-size:10px;font-weight:900;margin-right:4px}.tag.hot{background:#fdece8;color:var(--cheonan-orange)}.tag.grow{background:#e6f6ea;color:var(--cheonan-green)}.tag.warn{background:#fdece8;color:var(--cheonan-orange)}.map-wrap{position:relative;min-height:0;background:#dbeafe}.map{width:100%;height:100%}.map-fallback{position:absolute;inset:0;background:linear-gradient(135deg,#e0ebff,#f8fbff);overflow:hidden}.map-fallback::before{content:"";position:absolute;inset:0;opacity:.28;background-image:linear-gradient(#a5b4fc 1px,transparent 1px),linear-gradient(90deg,#a5b4fc 1px,transparent 1px);background-size:54px 54px}.fake-road{position:absolute;background:rgba(255,255,255,.9);border-radius:999px;box-shadow:0 2px 8px rgba(15,23,42,.04)}.bubble{position:absolute;transform:translate(-50%,-50%);border-radius:999px;border:2px solid rgba(255,255,255,.8);display:grid;place-items:center;text-align:center;color:#fff;font-weight:900;box-shadow:0 8px 26px rgba(15,23,42,.18);cursor:pointer}.bubble small{display:block;font-size:10px;opacity:.9}.map-toolbar{position:absolute;left:18px;bottom:18px;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow);z-index:6;max-width:300px}.map-toolbar strong{font-size:13px;color:var(--navy)}.legend{display:flex;gap:8px;margin-top:8px;align-items:center;font-size:11px;color:#42605a;font-weight:800}.dot{width:10px;height:10px;border-radius:999px}.map-note{position:absolute;right:18px;top:18px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:11px 13px;box-shadow:var(--shadow);font-size:12px;color:#42605a;z-index:5;max-width:300px;line-height:1.5}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px}.metric .v{font-size:28px;font-weight:900}.metric .l{font-size:12px;color:var(--muted);font-weight:800}.bar{height:9px;background:#e4f0fb;border-radius:999px;overflow:hidden;margin-top:8px}.bar>i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#4aa3e0,#0e64b0)}.insight{line-height:1.75;color:#334155;font-size:14px;font-weight:600}.news-tabs{display:flex;gap:5px;background:#e4f0fb;border-radius:14px;padding:4px;margin-bottom:12px}.news-tabs button{flex:1;border:0;background:transparent;border-radius:10px;padding:8px 4px;font:inherit;font-size:12px;font-weight:900;color:#5b7068;cursor:pointer}.news-tabs button.active{background:#fff;color:var(--cheonan-blue);box-shadow:0 3px 10px rgba(11,74,111,.1)}.news-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px;margin-bottom:10px}.news-card .src{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;font-weight:800;margin-bottom:7px}.news-card h4{font-size:14px;line-height:1.45;margin-bottom:8px}.news-card p{font-size:12px;color:#42605a;line-height:1.6}.news-card a{color:var(--cheonan-blue);text-decoration:none;font-weight:900}.news-live{background:linear-gradient(135deg,#0b4a6f,#0e64b0);color:#fff;border-radius:18px;padding:14px;margin-bottom:12px}.news-live h3{margin-bottom:8px}.news-live p{font-size:12px;line-height:1.65;color:#dbeafe}.copy{font-size:11px;color:#64748b;line-height:1.7}.select-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.select-row select{height:40px;border:1px solid var(--line);border-radius:12px;padding:0 10px;font:inherit;font-weight:800;background:#fff}.mobile-only{display:none}@media(max-width:1200px){body{overflow:auto}.app{height:auto}.layout{display:block}.left,.right{border:0}.map-wrap{height:560px}.mobile-only{display:block}.nav-tabs{display:none}}
+
+.boundary-tooltip{
+  position:absolute;
+  z-index:30;
+  pointer-events:none;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px 12px;
+  box-shadow:0 12px 30px rgba(15,23,42,.16);
+  font-size:12px;
+  color:#334155;
+  display:none;
+}
+.boundary-tooltip b{display:block;color:#122456;font-size:14px;margin-bottom:4px}
+
+
+.dong-label{
+  background:rgba(255,255,255,.88);
+  border:1px solid rgba(148,163,184,.7);
+  color:#334155;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  box-shadow:0 4px 12px rgba(15,23,42,.12);
+  white-space:nowrap;
+}
+.dong-label.active{
+  background:#2563eb;
+  color:#fff;
+  border-color:#2563eb;
+}
+
+
+.home-guide{display:grid;gap:12px}
+.home-guide-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 10px 24px rgba(18,36,86,.06)}
+.home-guide-card h4{margin:0 0 6px;font-size:15px;color:#122456}
+.home-guide-card p{margin:0;color:#64748b;font-size:12px;line-height:1.55}
+.map-toolbar.clean{min-width:220px}
+.map-toolbar .hint-line{color:#64748b;font-size:12px;margin-top:6px;line-height:1.45;font-weight:700}
+.score-color-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+.score-color-legend span{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#64748b;font-weight:800}
+.score-color-legend i{display:inline-block;width:10px;height:10px;border-radius:999px}
+
+.insight-chart{display:grid;gap:9px;margin-bottom:14px}
+.ic-row{display:grid;grid-template-columns:88px 1fr 40px;align-items:center;gap:9px}
+.ic-row .ic-label{font-size:12px;font-weight:800;color:#475569}
+.ic-row .ic-track{height:14px;background:#eef2ff;border-radius:999px;overflow:hidden}
+.ic-row .ic-fill{display:block;height:100%;border-radius:999px;transition:width .5s cubic-bezier(.2,.7,.2,1)}
+.ic-row .ic-val{font-size:13px;font-weight:900;text-align:right;font-family:'Outfit',sans-serif}
+.insight-headline{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.insight-headline .ih-badge{border-radius:999px;padding:5px 11px;font-size:12px;font-weight:900;color:#fff}
+.insight-headline .ih-sub{font-size:12px;color:#64748b;font-weight:700}
+.insight-kvs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.insight-kv{background:#f8faff;border:1px solid var(--line);border-radius:14px;padding:9px 11px}
+.insight-kv .k{font-size:11px;color:#64748b;font-weight:800}
+.insight-kv .v{font-size:16px;font-weight:900;color:#122456;font-family:'Outfit',sans-serif}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand"><img class="brand-icon-img" src="./cheonan_logo.png" alt="천안시 로고"><div class="brand-text"><strong>천안 상권 어때?</strong><small>천안시 입지·상권 분석 플랫폼</small></div></div>
+    <div class="search"><b>🔍</b><input id="searchInput" placeholder="두정동, 부성역, 카페, 아파트, 창업 추천 검색"></div>
+    <div class="nav-tabs" id="viewTabs">
+      <button class="active" data-view="home">홈</button>
+      <button data-view="cafe">카페 창업</button>
+      <button data-view="food">음식점 창업</button>
+      <button data-view="activity">생활·액티비티</button>
+      <button data-view="visit">방문 추천</button>
+      <button data-view="growth">미래 성장</button>
+      <button data-view="saturation">포화도</button>
+      <button data-view="news">뉴스</button>
+    </div>
+  </header>
+  <main class="layout">
+    <aside class="left">
+      <section class="hero">
+        <div class="kicker">🧭 천안 상권 어때? · pandas 데이터 분석</div>
+        <h1>천안 전역 법정동별 상권·주거·개발 호재를 한눈에</h1>
+        <p>동남구·서북구 전 지역을 대상으로 카페/음식점 밀집도, 업종 포화도, 아파트 주거수요, 역·터미널·대학 접근성, 뉴스 기반 개발호재를 결합해 입지를 점수화합니다.</p>
+        <div class="hero-stats"><div class="hero-stat"><div class="v num">43</div><div class="l">분석 법정동</div></div><div class="hero-stat"><div class="v num">6</div><div class="l">분석 관점 + 뉴스</div></div></div>
+      </section>
+      <section class="panel">
+        <h3>분석 기준 선택</h3>
+        <div class="chips" id="bizChips"></div>
+      </section>
+      <div class="section-title"><h2 id="rankTitle">창업 추천 랭킹</h2><span id="rankCount"></span></div>
+      <div id="rankList"></div>
+    </aside>
+    <section class="map-wrap">
+      <div id="naverMap" class="map"></div>
+      <div id="fallbackMap" class="map-fallback" style="display:none">
+        <div class="fake-road" style="left:5%;top:30%;width:82%;height:22px;transform:rotate(-12deg)"></div><div class="fake-road" style="left:15%;top:62%;width:76%;height:18px;transform:rotate(8deg)"></div><div class="fake-road" style="left:44%;top:8%;width:18px;height:90%;"></div>
+      </div>
+      <div class="map-toolbar clean">
+        <strong>지도 선택 안내</strong>
+        <div class="hint-line">홈에서는 지도를 깔끔하게 보여줍니다.</div>
+        <div class="hint-line">분석 기준을 누르면 TOP 5 동이 색상별로 강조됩니다.</div>
+      </div>
+      <div class="map-note">동 경계를 클릭하면 상세 분석과 해당 동 뉴스가 바뀝니다.</div><div id="boundaryTooltip" class="boundary-tooltip"></div>
+    </section>
+    <aside class="right">
+      <section class="panel">
+        <h3 id="detailName">두정동</h3>
+        <p class="copy" id="detailMeta">서북구 · 대학/역세권 상권</p>
+        <div class="metrics" style="margin-top:12px">
+          <div class="metric"><div class="v num" id="cafeCnt">142</div><div class="l">카페 수</div></div>
+          <div class="metric"><div class="v num" id="foodCnt">318</div><div class="l">음식점 수</div></div>
+          <div class="metric"><div class="v num" id="aptCnt">18,400</div><div class="l">아파트/주거수요</div></div>
+          <div class="metric"><div class="v num" id="newsScore">78</div><div class="l">개발호재 점수</div></div>
+        </div>
+      </section>
+      <section class="panel">
+        <h3>입지 점수</h3>
+        <div class="copy">창업 추천 <b class="num" id="startupScore">72</b></div><div class="bar"><i id="startupBar" style="width:72%"></i></div><br>
+        <div class="copy">방문 추천 <b class="num" id="visitScore">91</b></div><div class="bar"><i id="visitBar" style="width:91%;background:linear-gradient(90deg,#fb923c,#f97316)"></i></div><br>
+        <div class="copy">미래 성장 <b class="num" id="growthScore">77</b></div><div class="bar"><i id="growthBar" style="width:77%;background:linear-gradient(90deg,#34d399,#10b981)"></i></div>
+      </section>
+      <section class="panel">
+        <h3>CSV 기반 상세 지표</h3>
+        <div class="copy">가까운 역: <b id="nearestStation">-</b> <span id="nearestStationKm"></span></div>
+        <div class="copy">가까운 대학: <b id="nearestUniversity">-</b> <span id="nearestUniversityKm"></span></div>
+        <div class="copy">가까운 터미널: <b id="nearestTerminal">-</b> <span id="nearestTerminalKm"></span></div>
+        <div class="copy">아파트 단지 수: <b class="num" id="aptComplexCount">0</b>개</div>
+        <div class="copy">주거 수요 점수 <b class="num" id="housingScore">0</b></div><div class="bar"><i id="housingBar" style="width:0%;background:linear-gradient(90deg,#a78bfa,#7c3aed)"></i></div><br>
+        <div class="copy">학생 수요 점수 <b class="num" id="studentScore">0</b></div><div class="bar"><i id="studentBar" style="width:0%;background:linear-gradient(90deg,#38bdf8,#2563eb)"></i></div>
+      </section>
+      <section class="panel"><h3>분석 인사이트</h3><div id="insightChart" class="insight-chart"></div><p class="insight" id="insightText"></p></section>
+      <section class="panel" id="newsPanel">
+        <h3>실시간 부동산·개발 뉴스 탭</h3>
+        <div class="news-tabs" id="newsTabs">
+          <button class="active" data-topic="아파트">아파트</button>
+          <button data-topic="도시개발">도시개발</button>
+          <button data-topic="역세권">역세권</button>
+        </div>
+        <div id="newsList"></div>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+const districts={"전체":["전체"],"동남구":["목천읍","풍세면","광덕면","북면","성남면","수신면","병천면","동면","중앙동","문성동","원성1동","원성2동","봉명동","일봉동","신방동","청룡동","신안동"],"서북구":["성환읍","성거읍","직산읍","입장면","성정1동","성정2동","쌍용1동","쌍용2동","쌍용3동","백석동","불당1동","불당2동","부성1동","부성2동"]};
+const bizViews=[["cafe","카페 창업"],["food","음식점 창업"],["activity","생활·액티비티"],["visit","방문 추천"],["growth","미래 성장"],["saturation","포화도"]];
+let areas=[
+{name:"두정동/부성1동",gu:"서북구",type:"대학·역세권 상권",lat:36.833,lng:127.143,cafe:142,food:318,apt:18400,comp:91,access:88,news:78,startup:72,visit:91,growth:77,saturation:94,color:"#f97316",insight:"두정동은 카페와 음식점이 이미 매우 밀집된 방문형 상권입니다. 창업 관점에서는 경쟁도가 높아 차별화가 필요하지만, 두정역·대학가·주거지 수요가 겹쳐 방문 추천 점수는 높습니다."},
+{name:"신부동",gu:"동남구",type:"터미널·복합상권",lat:36.819,lng:127.156,cafe:118,food:286,apt:9200,comp:86,access:95,news:73,startup:74,visit:93,growth:78,saturation:88,color:"#f97316",insight:"신부동은 터미널과 상업시설 접근성이 강해 유동인구 기반의 음식점 상권이 발달했습니다. 방문 추천은 높고, 창업은 임대료와 경쟁도를 함께 봐야 합니다."},
+{name:"불당1·2동",gu:"서북구",type:"주거지 기반 카페 상권",lat:36.807,lng:127.107,cafe:156,food:242,apt:32600,comp:82,access:80,news:82,startup:81,visit:88,growth:86,saturation:84,color:"#10b981",insight:"불당동은 대규모 아파트와 가족 단위 소비가 강한 지역입니다. 카페·디저트·브런치처럼 주거 수요와 맞는 업종의 안정성이 높습니다."},
+{name:"백석동",gu:"서북구",type:"창업 후보 생활권",lat:36.823,lng:127.115,cafe:68,food:124,apt:14800,comp:52,access:70,news:68,startup:86,visit:69,growth:74,saturation:49,color:"#2563eb",insight:"백석동은 두정동·불당동보다 경쟁도가 낮고 주거 수요가 있어 창업 후보지로 해석할 수 있습니다. 방문형 대형 상권보다는 생활밀착형 업종이 적합합니다."},
+{name:"성정1·2동",gu:"서북구",type:"역세권·음식점 상권",lat:36.812,lng:127.141,cafe:95,food:221,apt:12100,comp:78,access:83,news:66,startup:76,visit:82,growth:70,saturation:79,color:"#f97316",insight:"성정동은 천안역·두정동 사이의 음식점 수요가 있는 지역입니다. 이미 음식점 비중이 높아 업종 선택 시 포화도를 확인해야 합니다."},
+{name:"성성동/부성2동",gu:"서북구",type:"부성역·신흥 주거 성장권",lat:36.845,lng:127.131,cafe:74,food:132,apt:25200,comp:58,access:72,news:94,startup:90,visit:73,growth:96,saturation:55,color:"#7c3aed",insight:"성성동·부성2동은 주거 개발과 부성역 이슈가 연결되는 미래 성장형 입지입니다. 현재 경쟁도는 낮은 편이라 선점형 창업 후보로 제시하기 좋습니다."},
+{name:"안서동/신안동",gu:"동남구",type:"대학가 학생 수요",lat:36.833,lng:127.174,cafe:86,food:155,apt:6800,comp:67,access:76,news:61,startup:79,visit:80,growth:70,saturation:69,color:"#2563eb",insight:"안서동 생활권은 대학가 학생 수요가 중심입니다. 가격 민감도가 높은 음식점, 카페, 분식, 배달 친화 업종 분석에 적합합니다."},
+{name:"신방동",gu:"동남구",type:"생활밀착 주거 상권",lat:36.787,lng:127.127,cafe:72,food:168,apt:20100,comp:65,access:67,news:63,startup:80,visit:72,growth:71,saturation:63,color:"#2563eb",insight:"신방동은 아파트 기반 생활 상권으로, 대형 유동인구보다는 반복 방문 가능한 생활밀착형 카페·음식점이 어울립니다."},
+{name:"쌍용1·2·3동",gu:"서북구",type:"대규모 주거 생활권",lat:36.801,lng:127.125,cafe:123,food:264,apt:29800,comp:80,access:79,news:70,startup:78,visit:84,growth:76,saturation:81,color:"#10b981",insight:"쌍용동은 주거 수요가 두껍고 생활 서비스 소비가 안정적입니다. 카페와 음식점 모두 수요는 있으나 주요 도로 주변 경쟁도를 따로 봐야 합니다."},
+{name:"목천읍",gu:"동남구",type:"외곽 성장 후보",lat:36.782,lng:127.236,cafe:38,food:93,apt:6500,comp:36,access:48,news:55,startup:68,visit:49,growth:60,saturation:34,color:"#2563eb",insight:"목천읍은 중심 상권 밀도는 낮지만 경쟁도가 낮아 목적형 카페나 지역 생활 상권 분석 사례로 활용할 수 있습니다."},
+{name:"성환읍",gu:"서북구",type:"북부 생활권",lat:36.916,lng:127.131,cafe:42,food:126,apt:8800,comp:44,access:58,news:57,startup:70,visit:58,growth:63,saturation:42,color:"#2563eb",insight:"성환읍은 천안 북부 생활권으로, 도심형 과밀 상권과 비교해 경쟁도는 낮고 생활 수요 중심의 입지로 볼 수 있습니다."},
+{name:"병천면",gu:"동남구",type:"특화 음식 관광 상권",lat:36.763,lng:127.302,cafe:26,food:118,apt:2500,comp:50,access:42,news:45,startup:62,visit:66,growth:52,saturation:48,color:"#10b981",insight:"병천면은 순대거리 같은 특화 음식 상권 사례로 발표하기 좋습니다. 카페보다 음식점 특화도가 높다는 비교 포인트를 만들 수 있습니다."}
+];
+const fallbackNews={"천안 부성역 개발":[{title:"천안 부성역 신설 예정지 주변 상권 변화 주목",src:"뉴스 API 연결 전 예시",date:"실시간 연동 대기",desc:"부성역, 성성동, 부대동, 두정동 생활권을 미래 성장 점수에 반영하는 카드입니다.",link:"#"}],"천안 아파트 입주 상권":[{title:"대규모 아파트 입주와 생활밀착형 카페 수요",src:"뉴스 API 연결 전 예시",date:"실시간 연동 대기",desc:"아파트 세대수와 입주 예정 단지를 주거 수요 점수로 변환합니다.",link:"#"}],"천안 도시개발 상권":[{title:"천안 도시개발사업에 따른 신흥 상권 후보",src:"뉴스 API 연결 전 예시",date:"실시간 연동 대기",desc:"도시개발·산업단지·도로망 이슈를 개발호재 점수에 반영합니다.",link:"#"}],"천안 역세권 개발":[{title:"천안역·두정역·부성역 접근성 기반 상권 분석",src:"뉴스 API 연결 전 예시",date:"실시간 연동 대기",desc:"역과의 거리, 환승 가능성, 터미널 접근성을 접근성 점수로 계산합니다.",link:"#"}]};
+let selectedGu="전체", selectedDong="전체", selectedCat="전체", selectedView="home", selectedArea=null, map, markers=[], polygons=[], labelMarkers=[], selectedPolygon=null;
+let activeNewsTopic="아파트";
+let boundaryLoaded=false;
+function $(id){return document.getElementById(id)}
+function makeChips(){
+  if($('bizChips')){
+    $('bizChips').innerHTML=bizViews.map(([key,label])=>`<button class="chip ${key===selectedView?'active':''}" onclick="setView('${key}')">${label}</button>`).join('');
+  }
+}
+function setGu(g){selectedGu=g;makeChips();renderRanks();}
+function setDong(d){selectedDong=d;makeChips();renderRanks();}
+function setCat(c){selectedCat=c;makeChips();renderRanks();}
+function scoreKey(){return selectedView==='home'?null:selectedView==='cafe'?'cafe_startup':selectedView==='food'?'food_startup':selectedView==='activity'?'activity_startup':selectedView==='visit'?'visit':selectedView==='growth'?'growth':selectedView==='news'?'news':'saturation'}
+
+
+function viewColorSet(view=selectedView){
+  const sets={
+    home:{main:'#9db9af',hover:'#7dd3fc',selected:'#0e64b0',soft:'#e3ede8',name:'홈'},
+    cafe:{main:'#0e64b0',hover:'#7db8e6',selected:'#0a4d8a',soft:'#e4f0fb',name:'카페 창업'},
+    food:{main:'#e8472a',hover:'#f3a08e',selected:'#c23318',soft:'#fdece8',name:'음식점 창업'},
+    activity:{main:'#0f9d8a',hover:'#7fd6cb',selected:'#0b7d6e',soft:'#e1f5f1',name:'생활·액티비티'},
+    visit:{main:'#1a9e3e',hover:'#7fcf95',selected:'#137c2f',soft:'#e6f6ea',name:'방문 추천'},
+    growth:{main:'#1287c4',hover:'#86c8e9',selected:'#0d6a9c',soft:'#e2f1f9',name:'미래 성장'},
+    saturation:{main:'#e8472a',hover:'#f3a08e',selected:'#c23318',soft:'#fdece8',name:'포화도'},
+    news:{main:'#5b8a72',hover:'#a7c6b6',selected:'#456b58',soft:'#eaf2ed',name:'뉴스'}
+  };
+  return sets[view]||sets.home;
+}
+function updateMapGuideColor(){
+  const c=viewColorSet();
+  const box=document.querySelector('.map-toolbar.clean');
+  if(!box) return;
+  if(selectedView==='home'){
+    box.innerHTML=`<strong>지도 선택 안내</strong>
+      <div class="hint-line">홈에서는 TOP 5 표시 없이 지도를 깔끔하게 보여줍니다.</div>
+      <div class="hint-line">분석 기준을 누르면 상위 5개 동이 색상별로 강조됩니다.</div>`;
+  }else{
+    box.innerHTML=`<strong>${c.name} TOP 5 표시</strong>
+      <div class="hint-line">현재 기준의 상위 5개 동을 지도에 표시합니다.</div>
+      <div class="score-color-legend"><span><i style="background:${c.soft};border:1px solid ${c.main}"></i>TOP 5</span><span><i style="background:${c.selected}"></i>선택한 동</span></div>`;
+  }
+}
+
+function getTop5Areas(){
+  if(selectedView==='home') return [];
+  const key=scoreKey();
+  if(!key) return [];
+  return [...areas]
+    .filter(a=>selectedGu==='전체'||a.gu===selectedGu)
+    .sort((a,b)=>safeNum(b[key])-safeNum(a[key]))
+    .slice(0,5)
+    .map(a=>a.name);
+}
+function refreshMapTop5(){
+  updateMapGuideColor();
+  const top5=getTop5Areas();
+  const colors=viewColorSet();
+
+  if(markers&&markers.length){
+    markers.forEach((m,i)=>{
+      const a=areas[i];
+      const isTop=top5.includes(a.name);
+      if(m.setIcon){
+        m.setIcon({
+          content:`<div style="background:${isTop?colors.main:'#64748b'};color:#fff;padding:${isTop?'10px 14px':'7px 10px'};border-radius:999px;font-weight:900;box-shadow:0 6px 18px rgba(0,0,0,.25);border:2px solid white">${isTop?'TOP '+(top5.indexOf(a.name)+1)+' · ':''}${a.name}</div>`,
+          anchor:new naver.maps.Point(25,25)
+        });
+        m.setZIndex(isTop?500:100);
+      }
+    });
+  }
+
+  if(polygons&&polygons.length){
+    polygons.forEach(obj=>{
+      const p=obj.polygon||obj;
+      const a=obj.area;
+      if(!p||!a) return;
+      if(selectedArea&&a.name===selectedArea.name){
+      }else if(top5.includes(a.name)){
+        p.setOptions({fillColor:colors.soft,fillOpacity:0.76,strokeColor:colors.main,strokeWeight:4,strokeOpacity:1,zIndex:170});
+      }else{
+        setPolygonDefault(p,a);
+      }
+    });
+  }
+}
+function renderRanks(){
+  if(selectedView==='home'){
+    $('rankTitle').textContent='천안 상권·부동산 입지 분석 홈';
+    $('rankCount').textContent='분석 기준을 선택하세요';
+    $('rankList').innerHTML=`
+      <div class="home-guide">
+        <article class="home-guide-card">
+          <h4>1. 분석 기준 선택</h4>
+          <p>상단의 카페 창업, 음식점 창업, 생활·액티비티, 방문 추천, 미래 성장 중 하나를 선택하면 TOP 5 지역이 지도에 색상별로 강조됩니다.</p>
+        </article>
+        <article class="home-guide-card">
+          <h4>2. 지도에서 동 선택</h4>
+          <p>지도 위 동 경계를 클릭하면 해당 동의 카페 수, 음식점 수, 아파트 세대수, 접근성, 추천 점수와 실시간 뉴스를 확인할 수 있습니다.</p>
+        </article>
+        <article class="home-guide-card">
+          <h4>3. CSV 기반 분석</h4>
+          <p>소상공인 상가업소정보, 공동주택 정보, 역 정보, 대학교 정보를 pandas로 결합해 법정동별 입지 점수를 계산합니다.</p>
+        </article>
+      </div>
+    `;
+    setTimeout(refreshMapTop5,100);
+    return;
+  }
+
+  let list=areas.filter(a=>selectedGu==='전체'||a.gu===selectedGu);
+  const key=scoreKey();
+  list=[...list].sort((a,b)=>safeNum(b[key])-safeNum(a[key]));
+  const titles={cafe:'카페 창업 추천 TOP 5',food:'음식점 창업 추천 TOP 5',activity:'생활·액티비티 창업 TOP 5',visit:'방문 추천 TOP 5',growth:'미래 성장 TOP 5',saturation:'상권 포화도 TOP 5',news:'뉴스 영향 지역 TOP 5'};
+  const c=viewColorSet();
+  $('rankTitle').textContent=titles[selectedView]||'추천 TOP 5';
+  $('rankCount').textContent='상위 5개 지역 지도 강조';
+  $('rankList').innerHTML=list.slice(0,5).map((a,i)=>{
+    const score=safeNum(a[key]);
+    const meta = selectedView==='cafe'
+      ? `카페 ${a.cafe}개 · 카페 창업 ${a.cafe_startup ?? score}점`
+      : selectedView==='food'
+        ? `음식점 ${a.food}개 · 음식점 창업 ${a.food_startup ?? score}점`
+        : selectedView==='activity'
+          ? `생활·액티비티 ${a.activity_count ?? 0}개 · 창업 ${a.activity_startup ?? score}점`
+          : `카페 ${a.cafe} · 음식점 ${a.food} · 포화도 ${a.comp}`;
+    return `<article class="rank-card" style="border-left:6px solid ${c.main}" onclick="selectArea('${a.name}')"><div class="rank-no num">${i+1}</div><div><div class="rank-name">${a.name}</div><div class="rank-meta"><span class="tag ${score>75?'grow':score>55?'hot':'warn'}">${a.type}</span><br>${meta}</div></div><div class="rank-score"><div class="v num" style="color:${c.main}">${score}</div><div class="l">${(titles[selectedView]||'추천').replace(' TOP 5','')}</div></div></article>`;
+  }).join('');
+  setTimeout(refreshMapTop5,100);
+}
+function selectArea(name){
+  selectedArea=areas.find(a=>a.name===name)||areas[0];
+  renderDetail();
+  focusMap();
+  refreshDongLabels();
+  polygons.forEach(obj=>{
+    const p=obj.polygon||obj;
+    if(obj.area && obj.area.name===selectedArea.name){
+      selectedPolygon=p;
+      setPolygonSelected(p);
+    }else{
+      setPolygonDefault(p, obj.area);
+    }
+  });
+  loadNews(makeDongNewsQuery(selectedArea));
+}
+function safeNum(v, fallback=0){const n=Number(v);return Number.isFinite(n)?n:fallback;}
+function makeDongNewsQuery(a){
+  if(!a) return '천안 부동산 개발 상권';
+  const dong=(a.name||'천안').replace(/\/.*/,'');
+  return a.news_query || `천안 ${dong} 부동산 개발 상권`;
+}
+function renderDetail(){
+  const a=selectedArea;
+  if(!a){
+    // 홈 상태: 아무 동도 선택되지 않음
+    $('detailName').textContent='동을 선택하세요';
+    $('detailMeta').textContent='지도에서 동 경계를 클릭하면 상세 분석이 표시됩니다';
+    ['cafeCnt','foodCnt','aptCnt','newsScore','startupScore','visitScore','growthScore','aptComplexCount','housingScore','studentScore'].forEach(id=>{if($(id))$(id).textContent='-';});
+    ['startupBar','visitBar','growthBar','housingBar','studentBar'].forEach(id=>{if($(id))$(id).style.width='0%';});
+    if($('nearestStation')){$('nearestStation').textContent='-';$('nearestStationKm').textContent='';$('nearestUniversity').textContent='-';$('nearestUniversityKm').textContent='';$('nearestTerminal').textContent='-';$('nearestTerminalKm').textContent='';}
+    $('insightText').innerHTML='<span style="color:#94a3b8">분석 기준을 선택하고 지도에서 동을 클릭하면 인사이트와 그래프가 표시됩니다.</span>';
+    if($('insightChart')) $('insightChart').innerHTML='';
+    return;
+  }
+  $('detailName').textContent=a.name;
+  $('detailMeta').textContent=`${a.gu} · ${a.type}`;
+  $('cafeCnt').textContent=safeNum(a.cafe).toLocaleString();
+  $('foodCnt').textContent=safeNum(a.food).toLocaleString();
+  $('aptCnt').textContent=safeNum(a.apt).toLocaleString();
+  $('newsScore').textContent=safeNum(a.news);
+  $('startupScore').textContent=safeNum(a.startup);
+  $('visitScore').textContent=safeNum(a.visit);
+  $('growthScore').textContent=safeNum(a.growth);
+  $('startupBar').style.width=Math.min(100,safeNum(a.startup))+'%';
+  $('visitBar').style.width=Math.min(100,safeNum(a.visit))+'%';
+  $('growthBar').style.width=Math.min(100,safeNum(a.growth))+'%';
+  $('insightText').textContent=a.insight||'분석 인사이트가 없습니다.';
+  renderInsightChart(a);
+
+  if($('nearestStation')){
+    $('nearestStation').textContent=a.nearest_station||'-';
+    $('nearestStationKm').textContent=a.nearest_station_km!==undefined?`(${safeNum(a.nearest_station_km).toFixed(2)}km)`:'';
+    $('nearestUniversity').textContent=a.nearest_university||'-';
+    $('nearestUniversityKm').textContent=a.nearest_university_km!==undefined?`(${safeNum(a.nearest_university_km).toFixed(2)}km)`:'';
+    $('nearestTerminal').textContent=a.nearest_terminal||'-';
+    $('nearestTerminalKm').textContent=a.nearest_terminal_km!==undefined?`(${safeNum(a.nearest_terminal_km).toFixed(2)}km)`:'';
+    $('aptComplexCount').textContent=safeNum(a.apartment_complex_count).toLocaleString();
+    $('housingScore').textContent=safeNum(a.housing_score);
+    $('studentScore').textContent=safeNum(a.student_score);
+    $('housingBar').style.width=Math.min(100,safeNum(a.housing_score))+'%';
+    $('studentBar').style.width=Math.min(100,safeNum(a.student_score))+'%';
+  }
+}
+function renderInsightChart(a){
+  const box=$('insightChart');
+  if(!box) return;
+  if(!a){box.innerHTML='';return;}
+  const c=viewColorSet();
+  // 현재 보기 기준에서 이 동의 순위 계산
+  const key=scoreKey();
+  let rankText='';
+  if(key){
+    const sorted=[...areas].sort((x,y)=>safeNum(y[key])-safeNum(x[key]));
+    const idx=sorted.findIndex(x=>x.name===a.name);
+    if(idx>=0) rankText=`${viewColorSet().name} ${idx+1}위 / ${areas.length}개 동`;
+  }
+  const rows=[
+    {label:'창업 추천',val:safeNum(a.startup),color:'#2563eb'},
+    {label:'방문 추천',val:safeNum(a.visit),color:'#f97316'},
+    {label:'미래 성장',val:safeNum(a.growth),color:'#10b981'},
+    {label:'주거 수요',val:safeNum(a.housing_score),color:'#7c3aed'},
+    {label:'개발 호재',val:safeNum(a.news),color:'#6366f1'},
+    {label:'상권 포화',val:safeNum(a.saturation),color:'#ef4444'}
+  ];
+  const badgeColor=c.selected||c.main||'#2563eb';
+  box.innerHTML=`
+    <div class="insight-headline">
+      <span class="ih-badge" style="background:${badgeColor}">${a.type||'분석 지역'}</span>
+      ${rankText?`<span class="ih-sub">📊 ${rankText}</span>`:''}
+    </div>
+    <div class="insight-kvs">
+      <div class="insight-kv"><div class="k">카페 / 음식점</div><div class="v">${safeNum(a.cafe).toLocaleString()} / ${safeNum(a.food).toLocaleString()}</div></div>
+      <div class="insight-kv"><div class="k">아파트 세대수</div><div class="v">${safeNum(a.apt).toLocaleString()}세대</div></div>
+    </div>
+    ${rows.map(r=>`
+      <div class="ic-row">
+        <span class="ic-label">${r.label}</span>
+        <span class="ic-track"><i class="ic-fill" style="width:${Math.min(100,r.val)}%;background:linear-gradient(90deg,${r.color}99,${r.color})"></i></span>
+        <span class="ic-val" style="color:${r.color}">${Math.round(r.val)}</span>
+      </div>`).join('')}
+  `;
+}
+function fallbackBubbles(){
+  const fb=$('fallbackMap');
+  fb.style.display='block';
+  document.querySelectorAll('.bubble').forEach(e=>e.remove());
+  const key=scoreKey();
+  areas.forEach((a,idx)=>{
+    const score=key?safeNum(a[key]):0;
+    const x=18+(idx%4)*23+Math.random()*2,y=18+Math.floor(idx/4)*20;
+    const b=document.createElement('div');
+    b.className='bubble';
+    b.style.left=x+'%';
+    b.style.top=y+'%';
+    b.style.width=(key?(54+score/2):58)+'px';
+    b.style.height=(key?(54+score/2):58)+'px';
+    b.style.background=key?viewColorSet().main:'#64748b';
+    b.innerHTML=key?`${a.name.split('/')[0]}<small>${score}</small>`:`${a.name.split('/')[0]}`;
+    b.onclick=()=>selectArea(a.name);
+    fb.appendChild(b);
+  });
+}
+function getScoreForArea(a){const key=scoreKey();return key?safeNum(a?.[key]):0;}
+function polygonColorByScore(score){return '#cbd5e1';}
+
+const dongAliases={
+  '용곡동':'청룡동',
+  '두정동':'부성1동',
+  '성성동':'부성2동',
+  '불당동':'불당1동',
+  '쌍용동':'쌍용2동',
+  '원성동':'원성1동'
+};
+
+function findAreaByDongName(name){
+  const n=String(name||'').replace(/\s+/g,'');
+  const aliased=dongAliases[n]||n;
+  return areas.find(a=>{
+    const an=String(a.name||'').replace(/\s+/g,'');
+    const base=an.replace(/\/.*/,'');
+    return an.includes(n)||n.includes(base)||base.includes(n)||an.includes(aliased)||aliased.includes(base);
+  });
+}
+function getFeatureDongName(props){
+  const keys=['ADM_NM','adm_nm','ADM_DR_NM','adm_dr_nm','행정동명','행정동','EMD_KOR_NM','emd_kor_nm','동명','name','NAME','법정동명','법정읍면동명'];
+  for(const k of keys){ if(props && props[k]) return String(props[k]); }
+  const vals=Object.values(props||{}).map(String);
+  return vals.find(v=>v.includes('동')||v.includes('읍')||v.includes('면')) || '';
+}
+function clearDongLabels(){
+  labelMarkers.forEach(m=>m.setMap(null));
+  labelMarkers=[];
+}
+function addDongLabels(){
+  if(!map||!window.naver) return;
+  clearDongLabels();
+  areas.forEach(a=>{
+    if(a.lat===undefined||a.lng===undefined) return;
+    const isActive=selectedArea && selectedArea.name===a.name;
+    const marker=new naver.maps.Marker({
+      position:new naver.maps.LatLng(a.lat,a.lng),
+      map,
+      icon:{
+        content:`<div class="dong-label ${isActive?'active':''}">${a.name}</div>`,
+        anchor:new naver.maps.Point(28,14)
+      },
+      zIndex:isActive?300:120
+    });
+    naver.maps.Event.addListener(marker,'click',()=>selectArea(a.name));
+    labelMarkers.push(marker);
+  });
+}
+function refreshDongLabels(){
+  if(!map||labelMarkers.length===0) return;
+  addDongLabels();
+}
+function setPolygonDefault(polygon, area){
+  polygon.setOptions({
+    fillColor:'#cbd5e1',
+    fillOpacity:area?0.32:0.14,
+    strokeColor:'#ffffff',
+    strokeOpacity:0.95,
+    strokeWeight:2,
+    zIndex:area?20:5
+  });
+}
+function setPolygonHover(polygon){
+  const c=viewColorSet();
+  polygon.setOptions({
+    fillColor:selectedView==='home'?'#7dd3fc':c.hover,
+    fillOpacity:0.74,
+    strokeColor:selectedView==='home'?'#0ea5e9':c.main,
+    strokeOpacity:1,
+    strokeWeight:4,
+    zIndex:220
+  });
+}
+function setPolygonSelected(polygon){
+  const c=viewColorSet();
+  polygon.setOptions({
+    fillColor:c.selected,
+    fillOpacity:0.78,
+    strokeColor:c.selected,
+    strokeOpacity:1,
+    strokeWeight:4,
+    zIndex:240
+  });
+}
+
+function drawGeoJsonBoundary(geojson){
+  if(!map||!window.naver||!geojson||!geojson.features) return false;
+  polygons.forEach(obj=>{
+    const p=obj.polygon||obj;
+    if(p.setMap) p.setMap(null);
+  });
+  polygons=[];
+  selectedPolygon=null;
+  boundaryLoaded=true;
+
+  geojson.features.forEach(feature=>{
+    const props=feature.properties||{};
+    const dongName=getFeatureDongName(props);
+    const area=findAreaByDongName(dongName);
+    const geom=feature.geometry;
+    if(!geom) return;
+
+    const makePath=(coords)=>coords.map(c=>new naver.maps.LatLng(c[1],c[0]));
+    let paths=[];
+    if(geom.type==='Polygon'){
+      paths=geom.coordinates.map(ring=>makePath(ring));
+    }else if(geom.type==='MultiPolygon'){
+      geom.coordinates.forEach(poly=>poly.forEach(ring=>paths.push(makePath(ring))));
+    }else{
+      return;
+    }
+
+    const polygon=new naver.maps.Polygon({
+      map,
+      paths,
+      fillColor:'#cbd5e1',
+      fillOpacity:area?0.32:0.14,
+      strokeColor:'#ffffff',
+      strokeOpacity:0.95,
+      strokeWeight:2,
+      zIndex:area?20:5
+    });
+
+    const item={polygon, area, dongName};
+    polygons.push(item);
+
+    naver.maps.Event.addListener(polygon,'click',()=>{
+      if(area){
+        selectedPolygon=polygon;
+        selectArea(area.name);
+        setPolygonSelected(polygon);
+      }
+    });
+
+    naver.maps.Event.addListener(polygon,'mouseover',(e)=>{
+      if(!area) return;
+      if(polygon!==selectedPolygon) setPolygonHover(polygon);
+      const tip=$('boundaryTooltip');
+      if(tip){
+        tip.innerHTML=`<b>${area.name}</b>창업 ${area.startup} · 방문 ${area.visit}<br>카페 ${area.cafe} · 음식점 ${area.food}`;
+        tip.style.display='block';
+      }
+    });
+
+    naver.maps.Event.addListener(polygon,'mouseout',()=>{
+      if(!area) return;
+      if(polygon===selectedPolygon){
+        setPolygonSelected(polygon);
+      }else{
+        setPolygonDefault(polygon, area);
+      }
+      const tip=$('boundaryTooltip');
+      if(tip) tip.style.display='none';
+    });
+
+    naver.maps.Event.addListener(polygon,'mousemove',(e)=>{
+      const tip=$('boundaryTooltip');
+      if(tip && e.domEvent){
+        tip.style.left=(e.domEvent.pageX+12)+'px';
+        tip.style.top=(e.domEvent.pageY+12)+'px';
+      }
+    });
+  });
+
+  addDongLabels();
+  return polygons.length>0;
+}
+async function loadBoundaryMap(){
+  try{
+    const res=await fetch('./result/dong_boundary.geojson');
+    if(!res.ok) throw new Error('dong_boundary.geojson 없음');
+    const geojson=await res.json();
+    const ok=drawGeoJsonBoundary(geojson);
+    if(ok){
+      markers.forEach(m=>m.setMap(null));
+      markers=[];
+      console.log('행정동 경계 색칠 지도 로드 성공');
+    }
+  }catch(e){
+    console.warn('행정동 경계 GeoJSON이 없어 중심 마커로 표시합니다.', e);
+  }
+}
+function initMap(){
+  try{
+    if(!window.naver||!naver.maps) throw new Error('no naver');
+    map=new naver.maps.Map('naverMap',{center:new naver.maps.LatLng(36.815,127.145),zoom:12,zoomControl:true});
+    markers=areas.map(a=>new naver.maps.Marker({
+      position:new naver.maps.LatLng(a.lat,a.lng),
+      map,
+      icon:{content:`<div style="background:#64748b;color:#fff;padding:8px 11px;border-radius:999px;font-weight:900;box-shadow:0 6px 18px rgba(0,0,0,.25);border:2px solid white">${a.name}</div>`,anchor:new naver.maps.Point(25,25)}
+    }));
+    markers.forEach((m,i)=>naver.maps.Event.addListener(m,'click',()=>selectArea(areas[i].name)));
+    loadBoundaryMap();
+  }catch(e){
+    fallbackBubbles();
+  }
+}
+function clearSelection(){
+  // 홈 진입 시: 선택했던 동을 해제하고 아무것도 선택하지 않은 상태로 되돌린다
+  selectedArea=null;
+  selectedPolygon=null;
+  if(polygons&&polygons.length){
+    polygons.forEach(obj=>{
+      const p=obj.polygon||obj;
+      setPolygonDefault(p, obj.area);
+    });
+  }
+  refreshDongLabels();
+  renderDetail();
+}
+function focusMap(){if(map&&window.naver&&selectedArea){map.panTo(new naver.maps.LatLng(selectedArea.lat,selectedArea.lng));} }
+function setView(v){
+  selectedView=v;
+  document.querySelectorAll('#viewTabs button').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+  // 다른 분석 기준을 누르면 기존에 선택했던 동은 해제한다
+  clearSelection();
+  makeChips();renderRanks();refreshMapTop5();updateMapGuideColor();
+  if(boundaryLoaded){refreshDongLabels();}
+  if(!map) fallbackBubbles();
+}
+document.querySelectorAll('#viewTabs button').forEach(b=>b.onclick=()=>setView(b.dataset.view));
+$('searchInput').addEventListener('input',e=>{const q=e.target.value.trim(); if(!q){renderRanks();return;} const found=areas.find(a=>a.name.includes(q)||a.type.includes(q)); if(found) selectArea(found.name);});
+async function loadNews(query){
+  const q=query || makeDongNewsQuery(selectedArea);
+  $('newsList').innerHTML=`<p class="copy"><b>${q}</b> 뉴스 불러오는 중...</p>`;
+  try{
+    const res=await fetch(`http://127.0.0.1:8000/api/news?query=${encodeURIComponent(q)}&display=6`);
+    if(!res.ok) throw new Error('api not ready');
+    const data=await res.json();
+    if(data.error) throw new Error(data.error);
+    renderNews(data.items||[], q);
+  }catch(e){
+    console.warn('뉴스 API 연결 실패, 예시 뉴스로 표시합니다:', e);
+    renderNews(fallbackNews[q]||fallbackNews['천안 아파트 입주 상권'], q);
+  }
+}
+function renderNews(items, query='천안 부동산 개발 상권'){
+  if(!items || items.length===0){
+    $('newsList').innerHTML=`<p class="copy"><b>${query}</b> 관련 뉴스를 찾지 못했습니다.</p>`;
+    return;
+  }
+  $('newsList').innerHTML=`
+    <div class="copy" style="margin-bottom:8px">검색어: <b>${query}</b></div>
+    ${items.slice(0,5).map(n=>`
+      <article class="news-card">
+        <div class="src">
+          <span>${n.src||'NAVER News'}</span>
+          <span>${n.date||n.pubDate||''}</span>
+        </div>
+        <h4>${n.title||''}</h4>
+        <p>${n.desc||n.description||''}</p>
+        <a href="${n.link||n.originallink||'#'}" target="_blank">기사 보기</a>
+      </article>
+    `).join('')}
+  `;
+}
+document.querySelectorAll('#newsTabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#newsTabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');activeNewsTopic=b.dataset.topic||'아파트';loadNews(makeDongNewsQuery(selectedArea));});
+async function loadAnalysisResult(){
+  try{
+    const res=await fetch('./result/analysis_result.json');
+    const data=await res.json();
+    if(Array.isArray(data)&&data.length>0){
+      areas=data;
+      selectedArea=null;
+      console.log('pandas 분석 결과 로드 성공:', areas);
+      document.querySelector('.hero-stat .v.num').textContent=areas.length.toLocaleString();
+    }
+  }catch(e){
+    console.warn('analysis_result.json을 불러오지 못해 예시 데이터를 사용합니다.', e);
+  }
+
+  makeChips();
+  updateMapGuideColor();
+  renderRanks();
+  renderDetail();
+  setTimeout(()=>{initMap();setTimeout(refreshMapTop5,700);},500);
+  loadNews(makeDongNewsQuery(selectedArea));
+}
+loadAnalysisResult();
+</script>
+</body>
+</html>
